@@ -1,55 +1,48 @@
 //a class to represent a a matrix
 #include <iostream>
+#include <time.h>
+
 using namespace std;
 
-class MatrixElement {
-  public:
-    int i, j, x;
-};
 
-class SparseMatrix {
+class Matrix {
   private:
-    int m, n, number;
-    MatrixElement *elem;
+    int dimen[3][3];
   public:
     //Constructor
-    SparseMatrix(int m, int n, int number)
+    Matrix()
     {
-      this -> m = m;
-      this -> n = n;
-      this -> number = number;
-      elem = new MatrixElement[this -> number];
+
+      for(int i = 0; i < 3; i++)
+      {
+          for(int j = 0; j < 3; j++) {
+            /* initialize random seed: */
+            srand (time(NULL));
+            int number = rand() % 10 + 1;
+            this-> dimen[i][j] = number;
+          }
+      }
     }
     //Destructor
-    ~SparseMatrix() {
-      delete [] elem;
-    }
-    void readElements() {
-      //collecting matrix values from user
-      cout << "Input Elements not equal to zero";
-      for(int i = 0; i < number; i++)
-        cin >> elem[i].i >> elem[i].j >> elem[i].x;
+    ~Matrix() {
+      //delete [] elem;
     }
     void displayMatrix() {
       //variable to keep track of non zero elements
-      int k = 0;
-      for (int i = 0; i < m; i++) {
-        for (int j = 0; j < n; j++) {
-          if(elem[k].i == i && elem[k].j == j)
-          cout << elem[k++].x << " ";
-          else
-            cout << "0 ";
-            //for zero elemetns
+      for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+          cout << this->dimen[i][j];
         }
         cout << endl;
       }
     }
+
+
 };
 
 //main function to test matrix
 int main() {
-  SparseMatrix matrix(5, 5, 5);
-  matrix.readElements();
+  Matrix matrix;
   matrix.displayMatrix();
   return 0;
 }
