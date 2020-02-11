@@ -18,7 +18,8 @@ class Matrix {
           for(int j = 0; j < 3; j++) {
             /* initialize random seed: */
             srand (time(NULL));
-            int number = rand() % 10 + 1;
+            int number = rand() % 10 + j;
+            cout << "rando number " << number << endl;
             this-> dimen[i][j] = number;
           }
       }
