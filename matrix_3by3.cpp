@@ -12,14 +12,14 @@ class Matrix {
     //Constructor
     Matrix()
     {
-
+      srand (time(NULL));
       for(int i = 0; i < 3; i++)
       {
           for(int j = 0; j < 3; j++) {
             /* initialize random seed: */
-            srand (time(NULL));
+
             int number = rand() % 10 + j;
-            cout << "rando number " << number << endl;
+            //cout << "rando number " << number << endl;
             this-> dimen[i][j] = number;
           }
       }
