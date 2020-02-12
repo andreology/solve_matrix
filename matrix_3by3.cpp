@@ -1,3 +1,9 @@
+/**
+ * Authors
+ * Andre Barajas
+ * Gabriel Espejo
+ */
+
 //a class to represent a a matrix
 #include <iostream>
 #include <time.h>
@@ -6,7 +12,6 @@
 
 using namespace std;
 
-#define NUM_THREADS 9;
 
 class Matrix {
   private:
@@ -62,50 +67,41 @@ class Matrix {
 
 };
 
-//Each thread computes single element in the resultant matrix
-static void* mult(void* arg)
+//thread routine to multiply for each value
+static void* multiply(void* args)
 {
-    int* data = (int*)arg;
+    int* data = (int*)args;
     int k = 0;
     int x = data[0];
     for (int i = 1; i <= x; i++) {
         k += data[i] * data[i + x];
     }
-    int* p = (int*)malloc(sizeof(int));
-    *p = k;
-    //Used to terminate a thread and the return value is passed as a pointer
-    pthread_exit(p);
+    int* y = new int();
+    *y = k;
+    pthread_exit(y);
 }
   //main method to divide work b/w threads for a process
 static void multiplication(Matrix m1, Matrix m2) {
-    /*=============================================================*/
-    int i, j, k;
-    int max = 9;
     pthread_t* threads;
-    threads = (pthread_t*)malloc(max * sizeof(pthread_t));
-    int count = 0;
-    int* data = NULL;
-    for (i = 0; i < 3; i++) {
-        for (j = 0; j < 3; j++) {
-            //storing row and column elements in data
-            data = (int*)malloc((20) * sizeof(int));
+    threads = new pthread_t[9];
+    int c = 0;
+    int* data;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            data = new int[20];
             data[0] = 3;
 
-            for (k = 0; k < 3; k++) {
+            for (int k = 0; k < 3; k++) {
                 data[k + 1] = m1.getValue(i, k);
-            }
-            for (k = 0; k < 3; k++) {
                 data[k + 3 + 1] = m2.getValue(k, j);
             }
-            //creating threads
-            pthread_create(&threads[count++], NULL, mult, (void*)(data));
+            pthread_create(&threads[c++], NULL, multiply, (void*)(data));
 
         }
     }
     printf("\n");
-    for (i = 0; i < max; i++) {
+    for (int i = 0; i < 9; i++) {
         void* k;
-        //Joining all threads and collecting return value
         pthread_join(threads[i], &k);
         int* p = (int*)k;
         printf("%d ", *p);
@@ -113,7 +109,6 @@ static void multiplication(Matrix m1, Matrix m2) {
             printf("\n");
         }
     }
-    /*=============================================================*/
 }
 
 //main function to test matrix
