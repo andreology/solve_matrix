@@ -20,12 +20,12 @@ class Matrix {
       for(int i = 0; i < 3; i++)
         this -> dimen[i] = new int[3];
 
+        //assigning random integers to matrix
       srand (time(NULL));
       for(int i = 0; i < 3; i++)
       {
           for(int j = 0; j < 3; j++) {
             /* initialize random seed: */
-
             int number = rand() % 10 + j;
             //cout << "rando number " << number << endl;
             this-> dimen[i][j] = number;
@@ -35,18 +35,21 @@ class Matrix {
 
     //Destructor
     ~Matrix() {
+      //releasing heap memory
+      //deleting pointers in array first
       for(int i = 0; i < 3; i++)
         delete[] this -> dimen[i];
+      //now deleting pointer
       delete[] this -> dimen;
     }
 
-
+    //method to retrieve a value in matrix at an index
     int getValue(int i, int j) {
         int value = dimen[i][j];
         return value;
     }
 
-
+    //method to traverse pointers in array and print int values stored
     void displayMatrix() {
       //variable to keep track of non zero elements
       for (int i = 0; i < 3; i++) {
@@ -73,6 +76,7 @@ static void* mult(void* arg)
     //Used to terminate a thread and the return value is passed as a pointer
     pthread_exit(p);
 }
+  //main method to divide work b/w threads for a process
 static void multiplication(Matrix m1, Matrix m2) {
     /*=============================================================*/
     int i, j, k;
