@@ -10,11 +10,16 @@ using namespace std;
 
 class Matrix {
   private:
-    int dimen[3][3];
+    int **dimen;
   public:
     //Constructor
     Matrix()
     {
+      //allocating memory for two dimen array
+      this-> dimen = new int*[3];
+      for(int i = 0; i < 3; i++)
+        this -> dimen[i] = new int[3];
+
       srand (time(NULL));
       for(int i = 0; i < 3; i++)
       {
@@ -30,7 +35,9 @@ class Matrix {
 
     //Destructor
     ~Matrix() {
-      //delete [] elem;
+      for(int i = 0; i < 3; i++)
+        delete[] this -> dimen[i];
+      delete[] this -> dimen;
     }
 
 
@@ -52,7 +59,7 @@ class Matrix {
 
 };
 
-//Each thread computes single element in the resultant matrix 
+//Each thread computes single element in the resultant matrix
 static void* mult(void* arg)
 {
     int* data = (int*)arg;
@@ -63,20 +70,20 @@ static void* mult(void* arg)
     }
     int* p = (int*)malloc(sizeof(int));
     *p = k;
-    //Used to terminate a thread and the return value is passed as a pointer 
+    //Used to terminate a thread and the return value is passed as a pointer
     pthread_exit(p);
 }
 static void multiplication(Matrix m1, Matrix m2) {
     /*=============================================================*/
     int i, j, k;
-    int max = 9;		 
+    int max = 9;
     pthread_t* threads;
     threads = (pthread_t*)malloc(max * sizeof(pthread_t));
     int count = 0;
     int* data = NULL;
     for (i = 0; i < 3; i++) {
         for (j = 0; j < 3; j++) {
-            //storing row and column elements in data 
+            //storing row and column elements in data
             data = (int*)malloc((20) * sizeof(int));
             data[0] = 3;
 
@@ -86,7 +93,7 @@ static void multiplication(Matrix m1, Matrix m2) {
             for (k = 0; k < 3; k++) {
                 data[k + 3 + 1] = m2.getValue(k, j);
             }
-            //creating threads 
+            //creating threads
             pthread_create(&threads[count++], NULL, mult, (void*)(data));
 
         }
@@ -94,7 +101,7 @@ static void multiplication(Matrix m1, Matrix m2) {
     printf("\n");
     for (i = 0; i < max; i++) {
         void* k;
-        //Joining all threads and collecting return value 
+        //Joining all threads and collecting return value
         pthread_join(threads[i], &k);
         int* p = (int*)k;
         printf("%d ", *p);
@@ -114,5 +121,3 @@ int main() {
   multiplication(matrix1, matrix2);
   return 0;
 }
-
-
